@@ -7,7 +7,9 @@ const methodeOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
-const { listingSchema } = require("./schema.js");
+const { listingSchema, reviewSchema } = require("./schema.js");
+const Review = require("./model/review.js");
+
 
 const MONGO_URL = 'mongodb://127.0.0.1:27017/wanderHub';
 
@@ -39,6 +41,16 @@ const validateListing = (req, res, next) => {
     }
 }
 
+const validateReview = (req, res, next) => {
+    let { error } = reviewSchema.validate(req.body);
+    if (error) {
+        let errMsg = error.details.map((el) => el.message).join(",");
+        throw new ExpressError(400, errMsg);
+    } else {
+        next();
+    }
+}
+
 app.get("/", (req, res) => {
     res.send("Hi, i am root");
 });
@@ -58,7 +70,7 @@ app.get("/listings/new", (req, res) => {
 app.get("/listings/:id",
     wrapAsync(async (req, res) => {
         let { id } = req.params;
-        const listing = await Listing.findById(id);
+        const listing = await Listing.findById(id).populate("reviews");
         res.render("listings/show.ejs", { listing });
     }));
 
@@ -105,9 +117,42 @@ app.delete("/listings/:id",
         res.redirect("/listings");
     }));
 
+//Reviews
+//post route
+app.post("/listings/:id/reviews",
+    validateReview, wrapAsync(
+        async (req, res) => {
+            let listing = await Listing.findById(req.params.id);
+            let newReview = new Review(req.body.review);
+
+            listing.reviews.push(newReview);
+
+            await newReview.save();
+            await listing.save();
+
+            console.log("new review saved!");
+            res.redirect(`/listings/${listing._id}`)
+
+        }));
+
+// delete review route
+app.delete("/listings/:id/reviews/:reviewId",
+    wrapAsync(async (req, res) => {
+        let { id, reviewId } = req.params;
+
+        let result = await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+        //pull basically find  instance of a value or values that match some specific condition from the and remove that from an existing array
+        let del = await Review.findByIdAndDelete(reviewId);
+        // console.log(result);
+        // console.log(del);
+        console.log("review deleted");
+        res.redirect(`/listings/${id}`);
+    })
+);
+
 //Error handling middleware
 app.all("*", (req, res, next) => {
-    next( new ExpressError(404, "Page Not Found!"));
+    next(new ExpressError(404, "Page Not Found!"));
 });
 app.use((err, req, res, next) => {
     let { status = 500, message = "Something Went Worng!" } = err;
