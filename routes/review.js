@@ -34,6 +34,7 @@ router.post("/",
             await listing.save();
 
             console.log("new review saved!");
+            req.flash("success","review posted successfully!");
             res.redirect(`/listings/${listing._id}`)
 
         }));
@@ -49,6 +50,7 @@ router.delete("/:reviewId",
         // console.log(result);
         // console.log(del);
         console.log("review deleted");
+        req.flash("success","review deleted successfully!");
         res.redirect(`/listings/${id}`);
     })
 );
