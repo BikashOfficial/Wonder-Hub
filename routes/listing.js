@@ -6,6 +6,9 @@ const wrapAsync = require("../utils/wrapAsync.js");
 // const ExpressError = require("../utils/ExpressError.js");
 const { isLoggedIn, isOwner, validateListing } = require("../middleware.js");
 const listingController = require("../controllers/listings.js");
+const multer = require('multer');
+const { storage } = require("../cloudConfig.js");
+const upload = multer({ storage });
 
 //new route
 router.get("/new", isLoggedIn,
@@ -14,28 +17,34 @@ router.get("/new", isLoggedIn,
 //router.route()
 router
     .route("/")
-    //Index route
+    //Index route           
     .get(wrapAsync(listingController.index))
     //create route
-    .post(isLoggedIn, validateListing,
+    .post(
+        isLoggedIn,
+        upload.single("listing[image]"),
+        validateListing,
         wrapAsync(listingController.addnewListing)
     );
+
+// .post(, function (req, res, next) {
+//     // req.file is the `avatar` file
+//     // req.body will hold the text fields, if there were any
+    // res.send(req.file);
+// });
 
 router.route("/:id")
     //show route
     .get(wrapAsync(listingController.show))
     //update route
-    .put(validateListing, isLoggedIn, isOwner,
-        wrapAsync(listingController.update)
-    )
+    .put(isLoggedIn, isOwner,upload.single("listing[image]"),validateListing,
+        wrapAsync(listingController.update))
     //Delete Route
     .delete(isLoggedIn, isOwner,
-        wrapAsync(listingController.delete)
-    );
+        wrapAsync(listingController.delete));
 
 //edit route
 router.get("/:id/edit", isLoggedIn, isOwner,
-    wrapAsync(listingController.edit)
-);
+    wrapAsync(listingController.edit));
 
 module.exports = router;
