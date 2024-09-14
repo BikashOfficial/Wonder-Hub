@@ -36,6 +36,8 @@ async function main() {
     await mongoose.connect(MONGO_URL);
 };
 
+
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(methodeOverride("_method"));
@@ -53,10 +55,6 @@ const sessionOptions = {
         httpOnly: true // to prevent from cross scripting attack
     }
 };
-
-app.get("/", (req, res) => {
-    res.send("Hi,  I am root");
-});
 
 app.use(session(sessionOptions));
 app.use(flash());
