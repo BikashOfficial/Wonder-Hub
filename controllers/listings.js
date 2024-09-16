@@ -4,6 +4,12 @@ const { storage } = require("../cloudConfig.js");
 const upload = multer({ storage });
 
 module.exports.index = async (req, res) => {
+    const search = req.query.search;
+    console.log(search);
+    if (search) {
+        const allListings = await Listing.find({country: `${search}`});
+        res.render("listings/index.ejs", { allListings });
+    }
     const allListings = await Listing.find({});
     res.render("listings/index.ejs", { allListings });
 };

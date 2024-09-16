@@ -16,7 +16,7 @@
     </script>
 
     <div class="row mt-3">
-        <div class="col-8 offset-3">
+        <div class="col-8 offset-3 magnet">
             <br>
             <h3>
                 <%= listing.title %>
@@ -42,9 +42,9 @@
         <% if (currUser && currUser._id.equals(listing.owner._id)) { %>
             <div class="btns mb-3">
                 <a style="width:auto !important;" href="/listings/<%= listing._id %>/edit"
-                    class="btn btn-dark col-1 offset-3 edit-btn">Edit</a>
+                    class="btn btn-dark col-1 offset-3 edit-btn magnet">Edit</a>
                 <form method="post" action="/listings/<%= listing._id %>?_method=DELETE">
-                    <button class="btn btn-dark offset-4">Delete</button>
+                    <button class="btn btn-dark offset-4 magnet">Delete</button>
                 </form>
             </div>
             <% } %>
@@ -95,7 +95,7 @@
                                     Please drop a comment
                                 </div>
                             </div>
-                            <button class="btn btn-outline-dark">Submit</button>
+                            <button class="btn btn-outline-dark magnet">Submit</button>
                         </form>
 
                         <br>
@@ -145,44 +145,43 @@
     </div>
 
 
-
     <div class="col-6 offset-3 mb-5"
-        style="box-shadow:0px 0px 25px rgb(56, 56, 56);border:2px solid black;height: 400px; width:80vh"
+        style="box-shadow:0px 0px 25px rgb(56, 56, 56);border:2px solid black;height: 400px; width:auto"
         id="mapContainer"></div>
-        <script>
-            // Initialize the platform object
-            console.log(mapToken);
-            const platform = new H.service.Platform({
-                'apikey': mapToken
-            });
-    
-            // Initialize the engine type:
-            const engineType = H.Map.EngineType['HARP'];
-    
-            // Obtain the default map types from the platform object:
-            const defaultLayers = platform.createDefaultLayers({
-                engineType
-            });
-    
-            // Instantiate (and display) a map:
-            const map = new H.Map(
-                document.getElementById("mapContainer"),
-                defaultLayers.vector.normal.map, {
-                engineType,
-                zoom: 10,
-                center: {
-                    lat: 28.7041,
-                    lng: 77.1025
-                }
-            });
-    
-            // MapEvents enables the event system.
-            // The behavior variable implements default interactions for pan/zoom (also on mobile touch environments).
-            const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-    
-            // Enable dynamic resizing of the map, based on the current size of the enclosing cntainer
-            window.addEventListener('resize', () => map.getViewPort().resize());
-    
-            // Create the default UI:
-            const ui = H.ui.UI.createDefault(map, defaultLayers)
-        </script>
+    <script>
+        // Initialize the platform object
+        console.log(mapToken);
+        const platform = new H.service.Platform({
+            'apikey': mapToken
+        });
+
+        // Initialize the engine type:
+        const engineType = H.Map.EngineType['HARP'];
+
+        // Obtain the default map types from the platform object:
+        const defaultLayers = platform.createDefaultLayers({
+            engineType
+        });
+
+        // Instantiate (and display) a map:
+        const map = new H.Map(
+            document.getElementById("mapContainer"),
+            defaultLayers.vector.normal.map, {
+            engineType,
+            zoom: 10,
+            center: {
+                lat: 28.7041,
+                lng: 77.1025
+            }
+        });
+
+        // MapEvents enables the event system.
+        // The behavior variable implements default interactions for pan/zoom (also on mobile touch environments).
+        const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+        // Enable dynamic resizing of the map, based on the current size of the enclosing cntainer
+        window.addEventListener('resize', () => map.getViewPort().resize());
+
+        // Create the default UI:
+        const ui = H.ui.UI.createDefault(map, defaultLayers)
+    </script>
