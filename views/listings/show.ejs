@@ -10,12 +10,36 @@
     <script type="text/javascript" charset="utf-8" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
     <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
 
+    <style>
+        
 
+        /* Custom CSS */
+        @media (max-width: 450px) {
+            .col-6.offset-3,.col-8.offset-3{
+                /* Reset any styles you want to disable */
+                /* For example, set width to auto and remove offset */
+                width: auto;
+                margin-left: 0;
+            }
+            .col-5{
+                width: auto;
+                margin-left: 0;
+            }
+            .col-8.offset-2{
+                width: 100%;
+                margin-left: 0;
+            }
+            .padding{
+                padding: 10px;
+            }
+        }
+    </style>
     <script>
         let mapToken = "<%= process.env.MAP_TOKEN %>";
+        let avg = 5;
     </script>
 
-    <div class="row mt-3">
+    <div class="padding row mt-3">
         <div class="col-8 offset-3 magnet">
             <br>
             <h3>
@@ -136,18 +160,18 @@
 
                                 <% } %>
 
-                                    <div class="col-8 mb-4">
+                                    <!-- <div class="col-8 mb-4">
                                         <h3>Where u will be</h3>
                                         <div id="map"></div>
-                                    </div>
+                                    </div> -->
 
                 </div>
     </div>
 
 
-    <div class="col-6 offset-3 mb-5"
+    <!-- <div class="col-6 offset-3 mb-5"
         style="box-shadow:0px 0px 25px rgb(56, 56, 56);border:2px solid black;height: 400px; width:auto"
-        id="mapContainer"></div>
+        id="mapContainer"></div> -->
     <script>
         // Initialize the platform object
         console.log(mapToken);

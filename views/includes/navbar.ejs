@@ -1,4 +1,8 @@
 <style>
+    .logo{
+        font-size: 1.8rem;
+        font-weight: 500;
+    }
     .btn-search{
         background-color: #fe424d;
         color: white;
@@ -21,18 +25,14 @@
 
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/listings"><i class="fa-regular fa-compass magnet"></i></a>
+        <a href="/listings" style="color: black; text-decoration:none" class="mb-2 mt-2"><h3 style="font-weight: bold;" class="mt-1">W<span><i class="fa-regular fa-compass logo"></i></span>NDER-HUB</h3></a> &nbsp; &nbsp;
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-link magnet" href="/listings">Home</a>
-                
-            </div>
 
             <div class="navbar-nav ms-auto">
-                <form class="d-flex" role="search" action="/listings" method="get">
+                <form class="d-flex mt-2" role="search" action="/listings" method="get">
                     <input class="form-control me-2 search-inp" type="search" name="search" id="search" placeholder="Search  for  Destinations">
                     <button class="btn btn-search magnet" type="submit">
                         Search</button>
@@ -40,15 +40,20 @@
             </div>
 
             <div class="navbar-nav ms-auto">
-                <a class="nav-link magnet" href="/listings/new">Add newListing</a>
-                <% if (!currUser) { %>
-                    <a class="nav-link magnet" href="/signup">Sign up</a>
-                    &nbsp;
+                <% if (currUser) { %>
+                    <a class="nav-link magnet" href="/listings/new">Add newListing</a>
+                    <% } %>
+
                     
-                    <a class= "nav-link magnet" href="/login">Login</a>
+                    
+                
+                <% if (!currUser) { %>
+                    <a class="nav-link magnet" style="color: green;" href="/signup">Sign up</a>
+                    
+                    <a class= "nav-link magnet" href="/login" style="color: blue;"> Login</a>
                     <% } %>
                         <% if (currUser) { %>
-                            <a class="nav-link magnet" href="/logout">Logout</a>
+                            <a class="nav-link magnet" style="color: red;" href="/logout">Logout</a>
                             <% } %>
 
             </div>
