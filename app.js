@@ -1,4 +1,4 @@
-if(process.env.NODE_ENV != "production"){
+if (process.env.NODE_ENV != "production") {
     require("dotenv").config();
 }
 
@@ -15,6 +15,7 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+const MongoStore = require('connect-mongo');
 
 const User = require("./model/user.js");
 
@@ -24,7 +25,7 @@ const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
 
-const MONGO_URL = 'mongodb://127.0.0.1:27017/wanderHub';
+const DB_URL = process.env.ATLASDB_URL;
 
 main()
     .then(() => {
@@ -33,7 +34,7 @@ main()
     .catch(err => console.log(err));
 
 async function main() {
-    await mongoose.connect(MONGO_URL);
+    await mongoose.connect(DB_URL);
 };
 
 
@@ -45,8 +46,21 @@ app.use(express.urlencoded({ extended: true }));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
+const store = MongoStore.create({
+    mongoUrl: DB_URL,
+    crypto: {
+        secret: process.env.SECRET,
+    },
+    touchAfter: 24 * 3600,
+});
+
+store.on("err",()=>{
+    console.log("error in mongo session ->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",err);
+})
+
 const sessionOptions = {
-    secret: "mysupersecretcode",
+    store,
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
